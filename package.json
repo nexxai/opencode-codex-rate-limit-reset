@@ -1,0 +1,19 @@
+{
+  "name": "opencode-codex-rate-limit-reset",
+  "version": "0.1.0",
+  "description": "View and redeem Codex rate-limit reset credits from OpenCode.",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": "^1.17.17"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.17.17"
+  }
+}
