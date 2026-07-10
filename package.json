@@ -2,6 +2,10 @@
   "name": "opencode-codex-rate-limit-reset",
   "version": "0.2.0",
   "description": "View and redeem Codex rate-limit reset credits from OpenCode.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexxai/opencode-codex-rate-limit-reset"
+  },
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
