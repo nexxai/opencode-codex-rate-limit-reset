@@ -15,6 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
 
@@ -29,10 +31,34 @@ jobs:
       - name: Run tests
         run: bun test
 
+      - name: Check for plugin changes
+        id: plugin-changes
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          changed=false
+
+          if [[ "$BEFORE" == 0000000000000000000000000000000000000000 ]]; then
+            changed=true
+          else
+            while IFS= read -r file; do
+              case "$file" in
+                *.test.ts) ;;
+                *) changed=true; break ;;
+              esac
+            done < <(git diff --name-only "$BEFORE" "$GITHUB_SHA" -- src)
+          fi
+
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
       - name: Publish to npm
+        if: steps.plugin-changes.outputs.changed == 'true'
         run: npm publish --provenance
 
       - name: Create GitHub release
+        if: steps.plugin-changes.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "v$(node --print \"require('./package.json').version\")" --generate-notes
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          gh release create "v$version" --generate-notes
